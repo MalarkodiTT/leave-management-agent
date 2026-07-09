@@ -12,6 +12,7 @@ A simple, modern Leave Management System that leverages AI to process and evalua
 * **Frontend:** HTML, Tailwind CSS, JavaScript (Fetch API)
 * **Backend:** Node.js
 * **AI:** Groq API 
+Live Link : https://leave-management-agent-bp9s.onrender.com/
 
 ## 📋 Prerequisites
 Before you begin, ensure you have the following installed:
