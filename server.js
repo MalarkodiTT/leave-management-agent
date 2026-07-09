@@ -6,7 +6,15 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+const path = require('path');
 
+// Serve static files from the current directory
+app.use(express.static(__dirname));
+
+// Serve index.html for the root route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 app.post('/api/analyze-leave', async (req, res) => {
     const { reason, email } = req.body;
     try {
