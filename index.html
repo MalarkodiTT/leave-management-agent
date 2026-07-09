@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>My Awesome Project</title> </head>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen font-sans">
+
+    <div id="authContainer" class="flex items-center justify-center min-h-screen">
+        <div id="loginBox" class="glass p-10 rounded-3xl w-96 shadow-2xl">
+            <h2 class="text-3xl font-bold mb-6 text-center text-blue-400">Employee Login</h2>
+            <input id="email" type="email" placeholder="Email" class="w-full p-4 mb-4 bg-gray-800 rounded-xl border border-gray-700">
+            <input id="pass" type="password" placeholder="Password" class="w-full p-6 mb-6 bg-gray-800 rounded-xl border border-gray-700">
+            <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold text-lg">Sign In</button>
+            <p class="mt-4 text-center text-gray-400">No account? <span onclick="showRegister()" class="text-blue-400 cursor-pointer hover:underline">Register</span></p>
+        </div>
+
+        <div id="registerBox" class="hidden glass p-10 rounded-3xl w-96 shadow-2xl">
+            <h2 class="text-3xl font-bold mb-6 text-center text-purple-400">Register</h2>
+            <input id="regEmail" type="email" placeholder="Email" class="w-full p-4 mb-4 bg-gray-800 rounded-xl border border-gray-700">
+            <input id="regPass" type="password" placeholder="Password" class="w-full p-6 mb-6 bg-gray-800 rounded-xl border border-gray-700">
+            <button onclick="register()" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-xl font-bold text-lg">Register</button>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden flex h-screen">
+        <div class="w-70 glass p-6 border-r border-gray-800">
+            <h1 class="text-3xl font-bold mb-12 text-blue-400">LeavePortal</h1>
+            <nav class="space-y-4">
+                <button onclick="showSection('chat')" class="w-full text-left text-xl p-4 hover:bg-gray-800 rounded-lg">Dashboard</button>
+                <button onclick="showSection('profile')" class="w-full text-left text-xl p-4 hover:bg-gray-800 rounded-lg">Profile</button>
+                <button onclick="showSection('history')" class="w-full text-left text-xl p-4 hover:bg-gray-800 rounded-lg">History</button>
+            </nav>
+        </div>
+
+        <div class="flex-1 p-10 overflow-y-auto">
+            <div id="chatSection" class=" w-full max-w-[1200px] h-[800px] mx-auto glass p-8 rounded-3xl border border-purple-800">
+                  <h2 class="text-2xl font-bold mb-6">Leave Request</h2>
+                <textarea id="reason" class="w-full h-40 p-4 bg-gray-950 rounded-xl mb-4 border border-gray-700" placeholder="Reason for leave..."></textarea>
+                <button onclick="submitLeave()" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-xl font-bold text-lg">Ask AI Agent</button>
+                <div id="result" class=" w-[700px] h-[700px]mt-6 p-6 bg-black/50 rounded-xl border border-gray-800">Waiting for input...</div>
+            </div>
+
+            <div id="profileSection" class="hidden max-w-2xl mx-auto glass p-8 rounded-3xl">
+                <h2 class="text-2xl font-bold mb-8">User Profile</h2>
+                <p id="profileMail" class="mb-8 text-gray-300"></p>
+                <div class="space-y-6">
+                    <input id="oldPass" type="password" placeholder="Old Password" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <input id="newPass" type="password" placeholder="New Password" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <button onclick="updatePassword()" class="bg-blue-600 px-6 py-3 rounded-lg w-full">Change Password</button>
+                </div>
+            </div>
+
+            <div id="historySection" class="hidden max-w-2xl mx-auto glass p-8 rounded-3xl">
+                <h2 class="text-2xl font-bold mb-6">Leave History</h2>
+                <div id="historyList" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <div class="w-80 glass p-6 border-l border-gray-800">
+            <h2 class="text-xl font-bold mb-6">July 2026</h2>
+            <div class="grid grid-cols-7 gap-2 text-center text-sm">
+                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                <script>for(let i=1; i<=31; i++) document.write(`<div class="p-2 bg-gray-800 rounded-full">${i}</div>`);</script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userData = { email: "", password: "" };
+        let history = [];
+
+        function showRegister() { document.getElementById('loginBox').classList.add('hidden'); document.getElementById('registerBox').classList.remove('hidden'); }
+        
+        function register() {
+            userData.email = document.getElementById('regEmail').value;
+            userData.password = document.getElementById('regPass').value;
+            alert("Registered!");
+            document.getElementById('registerBox').classList.add('hidden');
+            document.getElementById('loginBox').classList.remove('hidden');
+        }
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            if(email === userData.email && pass === userData.password) {
+                document.getElementById('authContainer').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('profileMail').innerText = "Logged in as: " + email;
+            } else { alert("Invalid email or password!"); }
+        }
+
+        function updatePassword() {
+            const oldP = document.getElementById('oldPass').value;
+            const newP = document.getElementById('newPass').value;
+            if(oldP === userData.password) {
+                userData.password = newP;
+                alert("Password changed successfully!");
+            } else { alert("Old password incorrect!"); }
+        }
+
+        function showSection(id) {
+            document.getElementById('chatSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('historySection').classList.add('hidden');
+            document.getElementById(id + 'Section').classList.remove('hidden');
+        }
+
+        async function submitLeave() {
+            const reason = document.getElementById('reason').value;
+            const res = await fetch('http://localhost:3000/api/analyze-leave', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ reason, email: userData.email })
+            });
+            const data = await res.json();
+            history.push({ reason, decision: data.decision, date: new Date().toLocaleDateString() });
+            
+            document.getElementById('result').innerHTML = `<p class="text-blue-400 font-bold">${data.decision}</p><p>${data.reason}</p>`;
+            
+            // Update History UI
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map(item => `<div class="p-3 bg-gray-800 rounded-lg">${item.date}: ${item.reason} - <span class="text-green-400">${item.decision}</span></div>`).join('');
+        }
+    </script>
+</body>
+</html>
